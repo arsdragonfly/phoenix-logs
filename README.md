@@ -88,3 +88,7 @@ To fix these issues run this command:
 `python debug.py -y 2009`
 
 It will detect and add all troubled records to the download queue again and you can redownload them as usual.
+
+# Unofficial Tenhou XML documentation
+[Part 1](https://blog.kobalab.net/entry/20170225/1488036549)
+[Part 2](https://blog.kobalab.net/entry/20170228/1488294993)

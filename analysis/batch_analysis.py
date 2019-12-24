@@ -12,15 +12,21 @@ from value_by_round import ValueByRound
 from yaku_by_round import YakuByRound
 from riichi_by_round import RiichiByRound
 from end_results import EndResults
+from delta_distribution import DeltaDistribution
 
-analyzers = [CallRateByRound(), DealInRateByRound(), ValueByRound(), YakuByRound(), RiichiByRound(), EndResults()]
-allowed_types = ["169", "225", "185"]
+analyzers = [DeltaDistribution()]
+allowed_types = [
+    "169",  # 4p houou hanchan
+    # "225",  # 4p houou tonpuusen
+    # "185",  # 3p houou
+]
 
-with sqlite3.connect('../logs/es4p.db') as conn:
+with sqlite3.connect('../db/2018.db') as conn:
     cursor = conn.cursor()
     cursor.execute('SELECT COUNT(*) FROM logs')
-    rowcount=cursor.fetchone()[0]
-    cursor.execute('SELECT log_content, log_id FROM logs')
+    rowcount = cursor.fetchone()[0]
+    cursor.execute(
+        'SELECT log_content, log_id FROM logs WHERE log_content != ""')
 
     for i in tqdm(range(rowcount), ncols=80, ascii=True):
         log = cursor.fetchone()
@@ -28,7 +34,10 @@ with sqlite3.connect('../logs/es4p.db') as conn:
             break
 
         content = bz2.decompress(log[0])
-        xml = etree.XML(content, etree.XMLParser(recover=True)).getroottree().getroot()
+        xml = etree.XML(content, etree.XMLParser(
+            recover=True)).getroottree().getroot()
+        # print(etree.tostring(xml, pretty_print=True).decode('unicode-escape'))
+        # break
 
         game_type = xml.find("GO").attrib["type"]
 
