@@ -1,6 +1,7 @@
 __pycache__
 .idea
 temp
-db
+db/*
 logs
 analysis/results
+envs

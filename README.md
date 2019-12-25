@@ -17,7 +17,7 @@ or from latest phoenix games page (http://tenhou.net/sc/raw/list.cgi)
 
 # Installation
 
-Just install requirements with command `pip install -r requirements.txt`
+Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) first if you don't have Anaconda/Miniconda already installed.
 
 # Download historical log ids
 
@@ -72,7 +72,6 @@ Where is `-l` is how much items to download and `-t` is count of threads to use.
 
 It will create N threads and parallel downloads. 
 You can choose that `-l` and `-t` numbers to download logs that will take ~one minute and add this command to a cron job. 
-I used `-l 180 -t 5` for my downloads.
 
 # Data consistency checking
 
