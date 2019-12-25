@@ -1,53 +1,24 @@
-Tested with **Python 3.7+**
+# Phoenix Logs Analyzer
 
-# Logs downloader
+Tools to download and analyze phoenix replays from tenhou.net.
 
-Tools to download phoenix replays from tenhou.net. 
-For example these logs can be useful for machine learning exercises.
-
-Forked from MahjongRepository/phoenix-logs
-
-
-This repo contains two main scripts:
-
-- Download and store log ids. 
-We can both obtain game ids from year archive (e.g., http://tenhou.net/sc/raw/scraw2009.zip) 
-or from latest phoenix games page (http://tenhou.net/sc/raw/list.cgi)
-- Download logs content to already collected log ids.
+In order to work with these replays, you need to first download the IDs for each replay you want to analyze, then fetch the corresponding replays from tenhou.net.
+For a whole year's amount of replays, the first step usually takes a few minutes, and the second step a few hours.
 
 # Installation
 
-Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) first if you don't have Anaconda/Miniconda already installed.
+Install [Anaconda](https://www.anaconda.com/) first if you don't have Anaconda/Miniconda already installed.
+Then, run the following command to fetch IDs of replays from 2018.
 
-# Download historical log ids
+`$ anaconda-project run`
 
-For example we want to download game ids for 2009 year (keep in mind that phoenix games started to appear only from 2009 year).
+# Download log IDs
 
-Input command:
-`python main.py -a id -y 2009`
+To download log IDs for 2009 (keep in mind that phoenix games started only since 2009).
 
-If script is doing download really slow, you can download archive with `wget` or your browser and put it in the `temp` folder.
-Example: Download http://tenhou.net/sc/raw/scraw2009.zip and put it to the `temp/scraw2009.zip`. 
-In that case script will skip downloading step.
+`$ python main.py -a id -y 2009`
 
-Output:
-```
-Set up new database /path/to/db/2009.db
-Downloading... scraw2009.zip
-[==================================================] 50822/50822
-Downloaded
-Extracting archive...
-Extracted
-Preparing the list of games...
-Found 80156 games
-Temp folder was removed
-Inserting new ids to the database...
-Done
-```
-
-# Download latest log ids
- 
-To download games from 1 January (current year) until (current day - 7 days) specify `-s` flag:
+To download games from January 1 of current year to (current day - 7 days), specify `-s` flag:
 
 `python main.py -a id -s`
 
@@ -55,39 +26,30 @@ As of early August 2019, the archive of game IDs for 2018 was still not availabl
 
 `python main.py -a id -s -y 2018`
 
-
-To download just log ids from latest 7 days:
+To download log IDs from last 7 days:
 
 `python main.py -a id`
 
-You can add this command to the cron (for example to run each one hour) and it will add new log ids to the DB.
-
 # Download log content
 
-To download log content for already downloaded ids use this command:
+To download log content for existing IDs:
 
 `python main.py -a content -y 2009 -l 50 -t 3`
 
-Where is `-l` is how much items to download and `-t` is count of threads to use.
-
-It will create N threads and parallel downloads. 
-You can choose that `-l` and `-t` numbers to download logs that will take ~one minute and add this command to a cron job. 
+Where `-l` specifies how many game logs to download and `-t` specifies the number of threads.
 
 # Data consistency checking
 
-Sometimes log content can't be downloaded because of different reasons (e.g., internet connection issues, tenhou server responsibility).
-
+The log content often can't be properly downloaded due to various reasons, such as connection issues or tenhou server problems. Tenhou server sometimes return the log content for the wrong game.
 And sometimes tenhou return for log A content from log B and it causes same log content for different log ids in our db.
 
-For example for 2009 year (with total 80156 logs) I had ~1500 not downloaded logs and ~800 logs with double content.
-So, ~2.9% of records had issues in the end of downloading process.
-
-To fix these issues run this command:
+To fix these issues:
 
 `python debug.py -y 2009`
 
-It will detect and add all troubled records to the download queue again and you can redownload them as usual.
+The command will detect and mark all broken log IDs for the given year. You may then re-run the command for downloading log content.
 
 # Unofficial Tenhou XML documentation
-[Part 1](https://blog.kobalab.net/entry/20170225/1488036549)
-[Part 2](https://blog.kobalab.net/entry/20170228/1488294993)
+
+- [Part 1](https://blog.kobalab.net/entry/20170225/1488036549)
+- [Part 2](https://blog.kobalab.net/entry/20170228/1488294993)
